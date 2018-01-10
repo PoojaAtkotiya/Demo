@@ -1,0 +1,37 @@
+{
+  "entries": [
+    {
+      "entry": "./lib/webparts/helloWorld/HelloWorldWebPart.js",
+      "manifest": "./src/webparts/helloWorld/HelloWorldWebPart.manifest.json",
+      "outputPath": "./dist/hello-world-web-part.bundle.js"
+    },
+    {
+      "entry": "./lib/webparts/fbForm/FbFormWebPart.js",
+      "manifest": "./src/webparts/fbForm/FbFormWebPart.manifest.json",
+      "outputPath": "./dist/fb-form-web-part.js"
+    },
+    {
+      "entry": "./lib/webparts/viewRequest/ViewRequestWebPart.js",
+      "manifest": "./src/webparts/viewRequest/ViewRequestWebPart.manifest.json",
+      "outputPath": "./dist/view-request-web-part.js"
+    },
+    {
+      "entry": "./lib/webparts/editConnectApprover/EditConnectApproverWebPart.js",
+      "manifest": "./src/webparts/editConnectApprover/EditConnectApproverWebPart.manifest.json",
+      "outputPath": "./dist/edit-connect-approver-web-part.js"
+    },
+    {
+      "entry": "./lib/webparts/myRequestListView/MyRequestListViewWebPart.js",
+      "manifest": "./src/webparts/myRequestListView/MyRequestListViewWebPart.manifest.json",
+      "outputPath": "./dist/my-request-list-view-web-part.js"
+    }
+  ],
+  "externals": {},
+  "localizedResources": {
+    "HelloWorldWebPartStrings": "webparts/helloWorld/loc/{locale}.js",
+    "FbFormWebPartStrings": "webparts/fbForm/loc/{locale}.js",
+    "ViewRequestWebPartStrings": "webparts/viewRequest/loc/{locale}.js",
+    "EditConnectApproverWebPartStrings": "webparts/editConnectApprover/loc/{locale}.js",
+    "MyRequestListViewWebPartStrings": "webparts/myRequestListView/loc/{locale}.js"
+  }
+}
