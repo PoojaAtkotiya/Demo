@@ -13,8 +13,11 @@ import { Link } from 'office-ui-fabric-react/lib/Link'
 import { autobind } from 'office-ui-fabric-react/lib/Utilities';
 import pnp from "sp-pnp-js";
 import { Web } from "sp-pnp-js";
-import { Item, Items } from 'sp-pnp-js/lib/sharepoint/items';
-
+// import { Item, Items } from 'sp-pnp-js/lib/sharepoint/items';
+import {
+  Spinner,
+  SpinnerSize
+} from 'office-ui-fabric-react/lib/Spinner';
 
 let _items: {
   key: number,
@@ -32,7 +35,8 @@ let _items: {
   // ApproveRejectedBy :string,
   ApproverComment :string,
   ApproveRejectedDate :string,
-   ViewLink :string,
+  ViewLink :string,
+  Attachments :string
 }[] = [];
 
 let _columns = [
@@ -46,8 +50,8 @@ let _columns = [
     maxWidth: 60,
     isResizable: true,  
     onRender : item =>(
-      <Link data-selection-invoke={ true } href={item.ViewLink }>
-     View
+      <Link data-selection-invoke={ true } href={item.ViewLink + item.Id }>
+      View
       </Link>
     )
   },
@@ -149,6 +153,20 @@ let _columns = [
     isResizable: true
     
   },
+  {
+    key: 'column14',
+    name: 'Attachment',
+    fieldName: 'Attachments',
+    minWidth: 100,
+    maxWidth: 200,
+    isResizable: true,
+    onRender: item => ( item.Attachments!=null? 
+      <Link data-selection-invoke={true} href={item.Attachments}>
+      Attachment
+      </Link>
+      :<span>No Attachment</span>
+    )
+  },
   
 ];
 
@@ -158,7 +176,7 @@ export default class AllItemsView extends React.Component<{},{items: {}[];}>
   constructor(props: {}) {
     super(props);  
   
-  pnp.sp.web.lists.getByTitle('Connect%20Approval').items.orderBy('ID', false).get().then(
+  pnp.sp.web.lists.getByTitle('Connect%20Approval').items.expand("AttachmentFiles").orderBy('ID', false).get().then(
     response => {
       response.map(item =>{
         _items.push({
@@ -177,7 +195,8 @@ export default class AllItemsView extends React.Component<{},{items: {}[];}>
           // ApproveRejectedBy :item.ApprovedByDisplay,
           ApproverComment :item.Approver_x0020_Comments,
           ApproveRejectedDate : (item.ApproveRejectedDate) ? new Date(item.ApproveRejectedDate).toLocaleDateString("en-GB"): '',
-          ViewLink :"https://bajajelect.sharepoint.com/teams/ConnectApp/SitePages/ViewRequestAllFields.aspx?ApproverId=" + item.ID
+          ViewLink :"https://bajajelect.sharepoint.com/teams/ConnectApp/SitePages/ViewRequestAllFields.aspx?ApproverId=",
+          Attachments: (item.AttachmentFiles.length>0? item.AttachmentFiles[0].ServerRelativeUrl:null)
         })
       })
     }
@@ -190,6 +209,17 @@ export default class AllItemsView extends React.Component<{},{items: {}[];}>
   }
 
   public render() {
+
+    if(_items.length===0){
+      setTimeout(() => {
+        this.setState({items : _items})
+      }, 500);
+      return (
+        <div>
+        <Spinner size={ SpinnerSize.large } label='Please wait, we are loading...'/>
+          </div>
+      )
+    }
 
     let { items } = this.state;
    
@@ -205,7 +235,7 @@ export default class AllItemsView extends React.Component<{},{items: {}[];}>
             layoutMode={ DetailsListLayoutMode.fixedColumns }
             //selection={ this._selection }
            // selectionPreservedOnEmptyClick={ true }
-            onItemInvoked={ this._onItemInvoked }
+           // onItemInvoked={ this._onItemInvoked }
             checkboxVisibility ={CheckboxVisibility.hidden}
            
            

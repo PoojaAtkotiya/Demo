@@ -12,7 +12,10 @@ import {
 } from 'office-ui-fabric-react/lib/DetailsList';
 import { autobind } from 'office-ui-fabric-react/lib/Utilities';
 import { Link } from 'office-ui-fabric-react/lib/Link';
-import { Item, Items } from 'sp-pnp-js/lib/sharepoint/items';
+import {
+  Spinner,
+  SpinnerSize
+} from 'office-ui-fabric-react/lib/Spinner';
 
 
 let _items: {
@@ -32,6 +35,7 @@ let _items: {
   ApproverComment :string, 
   ApproveRejectedDate :string, 
   ViewLink :string,
+  Attachments :string
 }[] = [];
 
 
@@ -49,7 +53,7 @@ let _columns = [
       maxWidth: 60,
       isResizable: true,  
       onRender : item =>(
-        <Link data-selection-invoke={ true } href={item.ViewLink }>
+        <Link data-selection-invoke={ true } href={item.ViewLink + item.Id }>
         Edit/View
         </Link>
       )
@@ -150,6 +154,20 @@ let _columns = [
     maxWidth: 100,
     isResizable: true 
     },
+    {
+      key: 'column14',
+      name: 'Attachment',
+      fieldName: 'Attachments',
+      minWidth: 100,
+      maxWidth: 200,
+      isResizable: true,
+      onRender: item => ( item.Attachments!=null? 
+        <Link data-selection-invoke={true} href={item.Attachments}>
+        Attachment
+        </Link>
+        :<span>No Attachment</span>
+      )
+    },
 
 ];
 
@@ -174,7 +192,7 @@ export default class SuperAdminListView extends React.Component<{}, {items: {}[]
         }
       if(isSuperUser)
       {
-        pnp.sp.web.lists.getByTitle('Connect%20Approval').items.filter("Status eq 'Approve' and SuperUserAcknowledged eq 'Assigned' and NewOrModifiedSuperUser eq 'New'").orderBy("ID",false).get().then(
+        pnp.sp.web.lists.getByTitle('Connect%20Approval').items.expand("AttachmentFiles").filter("Status eq 'Approve' and SuperUserAcknowledged eq 'Assigned' and NewOrModifiedSuperUser eq 'New'").orderBy("ID",false).get().then(
           response => {
             response.map(item =>{
               _items.push({
@@ -193,7 +211,8 @@ export default class SuperAdminListView extends React.Component<{}, {items: {}[]
                 ApproveRejectedBy :item.ApprovedByDisplay, 
                 ApproverComment :item.Approver_x0020_Comments, 
                 ApproveRejectedDate :(item.ApproveRejectedDate) ? new Date(item.ApproveRejectedDate).toLocaleDateString("en-GB"): '',
-                ViewLink :"https://bajajelect.sharepoint.com/teams/ConnectApp/SitePages/SuperUserApproval.aspx?ConnectId=" + item.ID
+                ViewLink :"https://bajajelect.sharepoint.com/teams/ConnectApp/SitePages/SuperUserApproval.aspx?ConnectId=",
+                Attachments: (item.AttachmentFiles.length>0? item.AttachmentFiles[0].ServerRelativeUrl:null)
               })
             })
           }
@@ -210,9 +229,16 @@ export default class SuperAdminListView extends React.Component<{}, {items: {}[]
 
   public render() {
 
-    this.state = {
-      items: _items
-    };
+    if(_items.length===0){
+      setTimeout(() => {
+        this.setState({items : _items})
+      }, 500);
+      return (
+        <div>
+        <Spinner size={ SpinnerSize.large } label='Please wait, we are loading...'/>
+          </div>
+      )
+    }
 
     let { items } = this.state;
 
@@ -224,7 +250,7 @@ export default class SuperAdminListView extends React.Component<{}, {items: {}[]
          //   onRenderCell={ this._onRenderCell } 
             columns={ _columns }
             layoutMode={ DetailsListLayoutMode.fixedColumns }
-            onItemInvoked={ this._onItemInvoked }
+           // onItemInvoked={ this._onItemInvoked }
             checkboxVisibility = {CheckboxVisibility.hidden}
           
           />
@@ -248,27 +274,3 @@ export default class SuperAdminListView extends React.Component<{}, {items: {}[]
     window.location.href = item.ViewLink;
   }
 }
-
-
-
-
-// export default class SuperAdminListView extends React.Component<ISuperAdminListViewProps, {}> {
-//   public render(): React.ReactElement<ISuperAdminListViewProps> {
-//     return (
-//       <div className={ styles.superAdminListView }>
-//         <div className={ styles.container }>
-//           <div className={ styles.row }>
-//             <div className={ styles.column }>
-//               <span className={ styles.title }>Welcome to SharePoint!</span>
-//               <p className={ styles.subTitle }>Customize SharePoint experiences using Web Parts.</p>
-//               <p className={ styles.description }>{escape(this.props.description)}</p>
-//               <a href="https://aka.ms/spfx" className={ styles.button }>
-//                 <span className={ styles.label }>Learn more</span>
-//               </a>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     );
-//   }
-// }

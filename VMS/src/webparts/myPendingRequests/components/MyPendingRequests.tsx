@@ -12,7 +12,10 @@ import {
 } from 'office-ui-fabric-react/lib/DetailsList';
 import { autobind } from 'office-ui-fabric-react/lib/Utilities';
 import { Link } from 'office-ui-fabric-react/lib/Link';
-import { Item, Items } from 'sp-pnp-js/lib/sharepoint/items';
+import {
+  Spinner,
+  SpinnerSize
+} from 'office-ui-fabric-react/lib/Spinner';
 
 let _items: {
   key: number, 
@@ -31,6 +34,7 @@ let _items: {
   ApproverComment :string, 
   ApproveRejectedDate :string, 
   EditLink :string,
+  Attachments :string
 }[] = [];
 
 let _Id: {
@@ -45,9 +49,9 @@ let _columns = [
     fieldName: 'EditLink', 
     minWidth: 50,
     maxWidth: 60,
-    isResizable: true,  
+    isResizable: true, 
     onRender : item =>(
-      <Link data-selection-invoke={ true } href={item.EditLink }>
+      <Link data-selection-invoke={ true } href={item.EditLink + item.Id }>
       Edit
       </Link>
     )
@@ -148,7 +152,20 @@ let _columns = [
   maxWidth: 100,
   isResizable: true 
   },
-
+  {
+    key: 'column14',
+    name: 'Attachment',
+    fieldName: 'Attachments',
+    minWidth: 100,
+    maxWidth: 200,
+    isResizable: true,
+    onRender: item => ( item.Attachments!=null? 
+      <Link data-selection-invoke={true} href={item.Attachments}>
+      Attachment
+      </Link>
+      :<span>No Attachment</span>
+    )
+  },
 ];
 
 
@@ -174,7 +191,7 @@ export default class MyPendingRequests extends React.Component< {},{items: {}[];
         }
         if(isSuperUser)
         {
-          pnp.sp.web.lists.getByTitle('Connect%20Approval').items.orderBy("ID",false).filter("Status eq 'Approve' and SuperUserAcknowledged eq 'Assigned'").get().then(
+          pnp.sp.web.lists.getByTitle('Connect%20Approval').items.expand("AttachmentFiles").orderBy("ID",false).filter("Status eq 'Approve' and SuperUserAcknowledged eq 'Assigned'").get().then(
             response => {
               response.map(item =>{
                 _items.push({
@@ -193,14 +210,15 @@ export default class MyPendingRequests extends React.Component< {},{items: {}[];
                   ApproveRejectedBy :item.ApprovedByDisplay, 
                   ApproverComment :item.Approver_x0020_Comments, 
                   ApproveRejectedDate :(item.ApproveRejectedDate) ? new Date(item.ApproveRejectedDate).toLocaleDateString("en-GB"): '',
-                  EditLink :"https://bajajelect.sharepoint.com/teams/ConnectApp/SitePages/SuperUserApproval.aspx?ConnectId=" + item.ID
+                  EditLink :"https://bajajelect.sharepoint.com/teams/ConnectApp/SitePages/SuperUserApproval.aspx?ConnectId=",
+                  Attachments: (item.AttachmentFiles.length>0? item.AttachmentFiles[0].ServerRelativeUrl:null)
                 })
               })
             }
           )
         }
         else{
-          pnp.sp.web.lists.getByTitle('Connect%20Approval').items.orderBy("ID",false).filter("Status eq 'In Progress' and Approver eq " + currentUserId).get().then(
+          pnp.sp.web.lists.getByTitle('Connect%20Approval').items.expand("AttachmentFiles").orderBy("ID",false).filter("Status eq 'In Progress' and Approver eq " + currentUserId).get().then(
             response => {
               console.log(response);
               response.map(item =>{
@@ -220,7 +238,8 @@ export default class MyPendingRequests extends React.Component< {},{items: {}[];
                   ApproveRejectedBy :item.ApprovedByDisplay, 
                   ApproverComment :item.Approver_x0020_Comments, 
                   ApproveRejectedDate :(item.ApproveRejectedDate) ? new Date(item.ApproveRejectedDate).toLocaleDateString("en-GB"): '',
-                  EditLink :"https://bajajelect.sharepoint.com/teams/ConnectApp/SitePages/ApprovalForm.aspx?ApproverId=" + item.ID
+                  EditLink :"https://bajajelect.sharepoint.com/teams/ConnectApp/SitePages/ApprovalForm.aspx?ApproverId=",
+                  Attachments: (item.AttachmentFiles.length>0? item.AttachmentFiles[0].ServerRelativeUrl:null)
                 })
               })
             }
@@ -238,6 +257,16 @@ export default class MyPendingRequests extends React.Component< {},{items: {}[];
   }
 
   public render(){
+    if(_items.length===0){
+      setTimeout(() => {
+        this.setState({items : _items})
+      }, 500);
+      return (
+        <div>
+        <Spinner size={ SpinnerSize.large } label='Please wait, we are loading...'/>
+          </div>
+      )
+    }
 
     let { items } = this.state;
     return (
@@ -247,7 +276,7 @@ export default class MyPendingRequests extends React.Component< {},{items: {}[];
             items={ items }
             columns={ _columns }
             layoutMode={ DetailsListLayoutMode.fixedColumns }
-            onItemInvoked={ this._onItemInvoked }
+            //onItemInvoked={ this._onItemInvoked }
             checkboxVisibility = {CheckboxVisibility.hidden}
           />
        

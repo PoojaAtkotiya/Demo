@@ -18,9 +18,10 @@ import { List } from 'office-ui-fabric-react/lib/List';
 import { Link } from 'office-ui-fabric-react/lib/Link';
 // import { Item, Items } from 'sp-pnp-js/lib/sharepoint/items';
 import {  Label } from 'office-ui-fabric-react/lib/';
-
-
-
+import {
+  Spinner,
+  SpinnerSize
+} from 'office-ui-fabric-react/lib/Spinner';
  
   let _items: {
     key: number, 
@@ -39,6 +40,7 @@ import {  Label } from 'office-ui-fabric-react/lib/';
     ApproverComment :string, 
     ApproveRejectedDate :string, 
     ViewLink :string,
+    Attachments :string
   }[] = [];
 
   let _Id: {
@@ -55,7 +57,7 @@ import {  Label } from 'office-ui-fabric-react/lib/';
         maxWidth: 60,
         isResizable: true,  
         onRender : item =>(
-          <Link data-selection-invoke={ true } href={item.ViewLink }>
+          <Link data-selection-invoke={ true } href={item.ViewLink + item.Id }>
           View
           </Link>
         )
@@ -156,6 +158,20 @@ import {  Label } from 'office-ui-fabric-react/lib/';
       maxWidth: 100,
       isResizable: true 
       },
+      {
+        key: 'column14',
+        name: 'Attachment',
+        fieldName: 'Attachments',
+        minWidth: 100,
+        maxWidth: 200,
+        isResizable: true,
+        onRender: item => ( item.Attachments!=null? 
+          <Link data-selection-invoke={true} href={item.Attachments}>
+          Attachment
+          </Link>
+          :<span>No Attachment</span>
+        )
+      },
   
 ];
 
@@ -168,8 +184,8 @@ export default class MyRequestListView extends React.Component<{}, {items: {}[];
     super(props);
   
     pnp.sp.web.currentUser.get().then(function(res){ 
-      pnp.sp.web.lists.getByTitle('Connect%20Approval').items.orderBy("ID",false).filter("AuthorId  eq "+res.Id).get().then(
-      response => {
+      pnp.sp.web.lists.getByTitle('Connect%20Approval').items.expand("AttachmentFiles").orderBy("ID",false).filter("AuthorId  eq "+res.Id).get().then(
+      response => { console.log(response)
          response.map(item =>{
            _items.push({
             key: item.ID, 
@@ -187,7 +203,8 @@ export default class MyRequestListView extends React.Component<{}, {items: {}[];
             // ApproveRejectedBy :item.ApprovedByDisplay, 
             ApproverComment :item.Approver_x0020_Comments, 
             ApproveRejectedDate :(item.ApproveRejectedDate) ? new Date(item.ApproveRejectedDate).toLocaleDateString("en-GB"): '',
-            ViewLink :"https://bajajelect.sharepoint.com/teams/ConnectApp/SitePages/ViewConnect.aspx?ConnectId=" + item.ID
+            ViewLink :"https://bajajelect.sharepoint.com/teams/ConnectApp/SitePages/ViewConnect.aspx?ConnectId=",
+            Attachments: (item.AttachmentFiles.length>0? item.AttachmentFiles[0].ServerRelativeUrl:null)
            })
          })
        }
@@ -205,10 +222,18 @@ export default class MyRequestListView extends React.Component<{}, {items: {}[];
   }
 
   public render() {
-    this.state = {
-      items: _items,
-   
-    };
+
+    if(_items.length===0){
+      setTimeout(() => {
+        this.setState({items : _items})
+      }, 500);
+      return (
+        <div>
+        <Spinner size={ SpinnerSize.large } label='Please wait, we are loading...'/>
+          </div>
+      )
+    }
+    
     let { items } = this.state;
 
     return (
@@ -220,7 +245,7 @@ export default class MyRequestListView extends React.Component<{}, {items: {}[];
             columns={ _columns }
             setKey='set'
             layoutMode={ DetailsListLayoutMode.fixedColumns }
-            onItemInvoked={ this._onItemInvoked }
+            // onItemInvoked={ this._onItemInvoked }
             checkboxVisibility = {CheckboxVisibility.hidden}
           
           />
@@ -240,21 +265,6 @@ export default class MyRequestListView extends React.Component<{}, {items: {}[];
       
     );
   }
-  // private _onRenderCell(item: any, index: number): JSX.Element {
-  //   return(
-      
-     
-  //     <div >
-  //        <div>
-           
-  //            <td>{item.ID}</td>
-  //            <td>{item.Title}</td>
-             
-  //         </div>
-         
-  //       </div>
-  //   )
-  // }
 
   @autobind
   private _onItemInvoked(item: any): void {
