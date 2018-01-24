@@ -40,7 +40,8 @@ import {
     ApproverComment :string, 
     ApproveRejectedDate :string, 
     ViewLink :string,
-    Attachments :string
+    Attachments :string,
+    RequestStatus : string
   }[] = [];
 
   let _Id: {
@@ -105,7 +106,7 @@ import {
       { 
       key: 'column6', 
       name: 'Status', 
-      fieldName: 'Status', 
+      fieldName: 'RequestStatus', 
       minWidth: 70, 
       maxWidth: 100, 
       isResizable: true 
@@ -144,7 +145,7 @@ import {
       // }, 
       { 
       key: 'column11', 
-      name: 'Approver Comment', 
+      name: 'JMD Comment', 
       fieldName: 'ApproverComment', 
       minWidth: 100, 
       maxWidth: 200, 
@@ -152,7 +153,7 @@ import {
       }, 
       { 
       key: 'column12', 
-      name: 'Approve/Rejected Date', 
+      name: 'Comment Date', 
       fieldName: 'ApproveRejectedDate', 
       minWidth: 70,
       maxWidth: 100,
@@ -185,7 +186,7 @@ export default class MyRequestListView extends React.Component<{}, {items: {}[];
   
     pnp.sp.web.currentUser.get().then(function(res){ 
       pnp.sp.web.lists.getByTitle('Connect%20Approval').items.expand("AttachmentFiles").orderBy("ID",false).filter("AuthorId  eq "+res.Id).get().then(
-      response => { console.log(response)
+      response => {
          response.map(item =>{
            _items.push({
             key: item.ID, 
@@ -196,15 +197,18 @@ export default class MyRequestListView extends React.Component<{}, {items: {}[];
             Category :item.Category, 
             Subcategory :item.Sub_x0020_Category, 
             description :item.Feedback_x0020_Description, 
-            Status :item.Status, 
+            Status :item.Status,
+            ApproverComment : (item.Status == 'Reject' ?  item.Approver_x0020_Comments :item.SuperUserComment) , 
+            ApproveRejectedDate :(item.Status == 'Reject' ? (item.ApproveRejectedDate ? new Date(item.ApproveRejectedDate).toLocaleDateString("en-GB"): '') : (item.SuperAdminCommentDate ? new Date(item.SuperAdminCommentDate).toLocaleDateString("en-GB") :'')),
+            RequestStatus :item.RequestStatus,  
             //CreatedBy :item.CreatedByDisplay, 
             //CreatedDate :(item.Created) ?new Date(item.Created).toLocaleDateString("en-GB") :'',
             // Approvers :item.ApproversDispay, 
-            // ApproveRejectedBy :item.ApprovedByDisplay, 
-            ApproverComment :item.Approver_x0020_Comments, 
-            ApproveRejectedDate :(item.ApproveRejectedDate) ? new Date(item.ApproveRejectedDate).toLocaleDateString("en-GB"): '',
+            // ApproveRejectedBy :item.ApprovedByDisplay,  
             ViewLink :"https://bajajelect.sharepoint.com/teams/ConnectApp/SitePages/ViewConnect.aspx?ConnectId=",
-            Attachments: (item.AttachmentFiles.length>0? item.AttachmentFiles[0].ServerRelativeUrl:null)
+            Attachments: (item.AttachmentFiles.length>0? item.AttachmentFiles[0].ServerRelativeUrl:null),
+           
+
            })
          })
        }

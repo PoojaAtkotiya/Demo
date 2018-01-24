@@ -16,4 +16,6 @@ export interface ISPList {
   ApprovedBy :string;
   CreatedBy :string;
   ApprovedRejectedDate :string;
+  Attachments :string;
+  FileName :string;
   } 

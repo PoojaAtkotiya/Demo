@@ -18,6 +18,8 @@ export interface ISPList {
   Created:string;
   Creator:string;
   ReasonForReject : string;
+  Attachments :string;
+  FileName :string;
   } 
 
   export interface IKeyText {

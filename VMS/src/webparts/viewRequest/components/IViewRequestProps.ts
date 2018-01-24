@@ -17,4 +17,9 @@ export interface ISPList {
   ApprovedBy :string;
   ApprovedRejectedDate :string;
   ReasonForReject :string;
+  RequestStatus : string;
+  SuperUserComment : string;
+  SuperAdminCommentDate :string;
+  Attachments :string,
+  FileName :string
   } 

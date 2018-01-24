@@ -1,4 +1,17 @@
 @import '~@microsoft/sp-office-ui-fabric-core/dist/sass/SPFabricCore.scss';
+.SPButton
+  {
+    color: #ca5010;
+    text-decoration: none;
+    cursor: pointer;
+    background: 0 0;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: "Segoe UI Regular WestEuropean","Segoe UI",Tahoma,Arial,sans-serif;
+  }
+
 
 .fbForm {
   .container {
@@ -84,4 +97,6 @@
     color:red;
     font-size: 12px;
   }
+  
 }
+

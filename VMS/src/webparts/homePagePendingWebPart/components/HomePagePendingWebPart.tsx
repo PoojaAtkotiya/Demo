@@ -8,6 +8,11 @@ import pnp from "sp-pnp-js";
 import { Web } from "sp-pnp-js";
 import { Item, Items } from 'sp-pnp-js/lib/sharepoint/items';
 import { autobind } from 'office-ui-fabric-react/lib/Utilities';
+import {
+  Image,
+  IImageProps,
+  ImageFit
+} from 'office-ui-fabric-react/lib/Image';
 
 let _items: {
   key: string,
@@ -64,6 +69,13 @@ export default class HomePagePendingWebPart extends React.Component<IHomePagePen
     })
   }
   public render(): React.ReactElement<IHomePagePendingWebPartProps> {
+    let imageProps: IImageProps = {
+      src: 'https://bajajelect.sharepoint.com/teams/ConnectApp/SiteAssets/Images/download.png',
+      imageFit: ImageFit.contain,
+      width: 450,
+      height: 50,
+      onClick: (ev) => window.location.href="https://bajajelect.sharepoint.com/teams/ConnectApp/SitePages/Pending Approval Requests.aspx"
+    };
     if (this.state.items.length === 0) {
       console.log(this.state.items.length)
       setTimeout(() => { this.setState({ items: _items }) }, 500)
@@ -76,21 +88,8 @@ export default class HomePagePendingWebPart extends React.Component<IHomePagePen
     let { items } = this.state
     console.log(this.state.items.length)
     return (
-      <div style ={{border : "1px solid #038387", fontSize : '20px !important'}}>
-        <CommandBar 
-        isSearchBoxVisible={false}
-        items={
-          [
-            {
-              key: 'myPendingReq',
-              name: 'My Pending Requests',
-              className: 'ms-CommandBarItem customCLS',
-            
-              onClick: (event) => { window.location.href = "https://bajajelect.sharepoint.com/teams/ConnectApp/SitePages/Pending%20Approval%20Requests.aspx"; }
-            }
-          ]
-        }
-      />
+      <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12" style ={{border : "1px solid #038387"}}>       
+      <Image { ...imageProps as any } src='https://bajajelect.sharepoint.com/teams/ConnectApp/SiteAssets/Images/PendingHomeNew.png' alt='My Pending Request' />
       </div>
     );
   }

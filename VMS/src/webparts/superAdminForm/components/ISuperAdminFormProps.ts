@@ -18,6 +18,8 @@ export interface ISPList {
   ApprovedRejectedDate :string;
   SuperUserAcknowledged : string;
   SuperUserComment :string;
+  Attachments :string,
+  FileName :string
   } 
 
  
