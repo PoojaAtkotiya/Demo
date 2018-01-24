@@ -7,15 +7,16 @@ import {
   PropertyPaneTextField
 } from '@microsoft/sp-webpart-base';
 
-import * as strings from 'MyRequestListViewWebPartStrings';
-import MyRequestListView from './components/MyRequestListView';
-import { IMyRequestListViewProps } from './components/IMyRequestListViewProps';
+import * as strings from 'MyPendingRequestsWebPartStrings';
+import MyPendingRequests from './components/MyPendingRequests';
+import { IMyPendingRequestsProps } from './components/IMyPendingRequestsProps';
 import pnp from "sp-pnp-js";
-export interface IMyRequestListViewWebPartProps {
+
+export interface IMyPendingRequestsWebPartProps {
   description: string;
 }
 
-export default class MyRequestListViewWebPart extends BaseClientSideWebPart<IMyRequestListViewWebPartProps> {
+export default class MyPendingRequestsWebPart extends BaseClientSideWebPart<IMyPendingRequestsWebPartProps> {
 
   public onInit(): Promise<void> {
     
@@ -27,12 +28,11 @@ export default class MyRequestListViewWebPart extends BaseClientSideWebPart<IMyR
       
     });
   }
+
   public render(): void {
     const element: React.ReactElement<{} > = React.createElement(
-      MyRequestListView
-      
+      MyPendingRequests
     );
-  
 
     ReactDom.render(element, this.domElement);
   }

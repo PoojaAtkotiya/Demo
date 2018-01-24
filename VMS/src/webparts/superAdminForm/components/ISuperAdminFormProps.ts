@@ -1,11 +1,9 @@
 import { IWebPartContext } from "@microsoft/sp-webpart-base";
 
-export interface IViewRequestProps {
+export interface ISuperAdminFormProps {
   description: string;
   context:IWebPartContext;
 }
-
-
 export interface ISPList {
   ID: string;
   Title:string;
@@ -14,7 +12,12 @@ export interface ISPList {
   Description:string;
   Status: string;
   ApproverComment : string;
+  CreatedDate :string;
   ApprovedBy :string;
+  CreatedBy :string;
   ApprovedRejectedDate :string;
-  ReasonForReject :string;
+  SuperUserAcknowledged : string;
+  SuperUserComment :string;
   } 
+
+ 

@@ -24,6 +24,36 @@
       "entry": "./lib/webparts/myRequestListView/MyRequestListViewWebPart.js",
       "manifest": "./src/webparts/myRequestListView/MyRequestListViewWebPart.manifest.json",
       "outputPath": "./dist/my-request-list-view-web-part.js"
+    },
+    {
+      "entry": "./lib/webparts/viewApproverForm/ViewApproverFormWebPart.js",
+      "manifest": "./src/webparts/viewApproverForm/ViewApproverFormWebPart.manifest.json",
+      "outputPath": "./dist/view-approver-form-web-part.js"
+    },
+    {
+      "entry": "./lib/webparts/allItemsView/AllItemsViewWebPart.js",
+      "manifest": "./src/webparts/allItemsView/AllItemsViewWebPart.manifest.json",
+      "outputPath": "./dist/all-items-view-web-part.js"
+    },
+    {
+      "entry": "./lib/webparts/myPendingRequests/MyPendingRequestsWebPart.js",
+      "manifest": "./src/webparts/myPendingRequests/MyPendingRequestsWebPart.manifest.json",
+      "outputPath": "./dist/my-pending-requests-web-part.js"
+    },
+    {
+      "entry": "./lib/webparts/superAdminForm/SuperAdminFormWebPart.js",
+      "manifest": "./src/webparts/superAdminForm/SuperAdminFormWebPart.manifest.json",
+      "outputPath": "./dist/super-admin-form-web-part.js"
+    },
+    {
+      "entry": "./lib/webparts/superAdminListView/SuperAdminListViewWebPart.js",
+      "manifest": "./src/webparts/superAdminListView/SuperAdminListViewWebPart.manifest.json",
+      "outputPath": "./dist/super-admin-list-view-web-part.js"
+    },
+    {
+      "entry": "./lib/webparts/homePagePendingWebPart/HomePagePendingWebPartWebPart.js",
+      "manifest": "./src/webparts/homePagePendingWebPart/HomePagePendingWebPartWebPart.manifest.json",
+      "outputPath": "./dist/home-page-pending-web-part-web-part.js"
     }
   ],
   "externals": {},
@@ -32,6 +62,12 @@
     "FbFormWebPartStrings": "webparts/fbForm/loc/{locale}.js",
     "ViewRequestWebPartStrings": "webparts/viewRequest/loc/{locale}.js",
     "EditConnectApproverWebPartStrings": "webparts/editConnectApprover/loc/{locale}.js",
-    "MyRequestListViewWebPartStrings": "webparts/myRequestListView/loc/{locale}.js"
+    "MyRequestListViewWebPartStrings": "webparts/myRequestListView/loc/{locale}.js",
+    "ViewApproverFormWebPartStrings": "webparts/viewApproverForm/loc/{locale}.js",
+    "AllItemsViewWebPartStrings": "webparts/allItemsView/loc/{locale}.js",
+    "MyPendingRequestsWebPartStrings": "webparts/myPendingRequests/loc/{locale}.js",
+    "SuperAdminFormWebPartStrings": "webparts/superAdminForm/loc/{locale}.js",
+    "SuperAdminListViewWebPartStrings": "webparts/superAdminListView/loc/{locale}.js",
+    "HomePagePendingWebPartWebPartStrings": "webparts/homePagePendingWebPart/loc/{locale}.js"
   }
 }

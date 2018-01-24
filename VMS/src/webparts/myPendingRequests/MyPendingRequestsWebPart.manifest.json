@@ -1,7 +1,7 @@
 {
   "$schema": "https://dev.office.com/json-schemas/spfx/client-side-web-part-manifest.schema.json",
-  "id": "85137b49-3b6b-4d8d-8ab9-8d253976313f",
-  "alias": "MyRequestListViewWebPart",
+  "id": "17aa587c-a5a1-44b5-950c-8489a6eb3961",
+  "alias": "MyPendingRequestsWebPart",
   "componentType": "WebPart",
 
   // The "*" signifies that the version should be taken from the package.json
@@ -16,11 +16,11 @@
   "preconfiguredEntries": [{
     "groupId": "5c03119e-3074-46fd-976b-c60198311f70", // Other
     "group": { "default": "Other" },
-    "title": { "default": "myRequestListView" },
-    "description": { "default": "myRequestListView description" },
+    "title": { "default": "MyPendingRequests" },
+    "description": { "default": "MyPendingRequests description" },
     "officeFabricIconFontName": "Page",
     "properties": {
-      "description": "myRequestListView"
+      "description": "MyPendingRequests"
     }
   }]
 }

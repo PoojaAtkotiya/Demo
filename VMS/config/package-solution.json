@@ -1,11 +1,11 @@
 {
   "$schema": "https://dev.office.com/json-schemas/spfx-build/package-solution.schema.json",
   "solution": {
-    "name": "vms-client-side-solution",
+    "name": "connect-client-side-solution",
     "id": "f31bd4be-da69-457c-afec-3587616edd0c",
-    "version": "1.0.0.0"
+    "version": "1.0.0.9"
   },
   "paths": {
-    "zippedPackage": "solution/vms.sppkg"
+    "zippedPackage": "solution/connect.sppkg"
   }
 }

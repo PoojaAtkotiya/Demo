@@ -12,10 +12,17 @@ export interface ISPList {
   SubCategory :string;
   Description:string;
   Status :string;
-  Approver :string;
+ // Approver :string;
   ApproverComment :string;
-  ConnectID:string;
+ // ConnectID:string;
   Created:string;
   Creator:string;
+  ReasonForReject : string;
   } 
+
+  export interface IKeyText {
+    key: number;
+    text:string;
+  } 
+
 

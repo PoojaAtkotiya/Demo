@@ -6,14 +6,14 @@ import {PrimaryButton, DefaultButton, Label } from 'office-ui-fabric-react/lib/'
 import pnp from "sp-pnp-js";
 import { Web } from "sp-pnp-js";
 import { UrlQueryParameterCollection } from '@microsoft/sp-core-library';
-import { Conversation } from 'sp-pnp-js/lib/graph/conversations';
-
+//import { Conversation } from 'sp-pnp-js/lib/graph/conversations';
 
 export default class ViewRequest extends React.Component<IViewRequestProps, {}> {
   
   private listdata: ISPList;
-  queryParameters: UrlQueryParameterCollection
+  queryParameters: UrlQueryParameterCollection;
   web: any;
+  //private approver : string;
 
   componentWillMount() {
     this.listdata = {
@@ -25,7 +25,8 @@ export default class ViewRequest extends React.Component<IViewRequestProps, {}> 
       Status: undefined,
       ApproverComment: undefined,
       ApprovedBy : undefined,
-      ApprovedRejectedDate :undefined
+      ApprovedRejectedDate :undefined,
+      ReasonForReject :undefined
     }
     
     this.web = new Web(this.props.context.pageContext.web.absoluteUrl);
@@ -34,6 +35,7 @@ export default class ViewRequest extends React.Component<IViewRequestProps, {}> 
       const Id: number = parseInt(this.queryParameters.getValue("ConnectId"));
       console.log("Id value is : " + Id);
       this.getListData(Id);
+    //  this.getApproverName(Id);
     }
   }
 
@@ -51,7 +53,9 @@ export default class ViewRequest extends React.Component<IViewRequestProps, {}> 
             Status: item.Status,
             ApproverComment: item.ApproverComment,
             ApprovedRejectedDate : item.ApprovedRejectedDate,
-            ApprovedBy :item.ApprovedBy
+            ApprovedBy : item.ApprovedBy,
+            ReasonForReject : item.ReasonForReject
+          
           };
         });
         this.setState(this.listdata);
@@ -60,7 +64,7 @@ export default class ViewRequest extends React.Component<IViewRequestProps, {}> 
 }
 
 private _getListData(Id): Promise<ISPList[]> {
-  return this.web.lists.getByTitle("Connect").items.filter("Id eq " + Id).get().then((response) => {
+  return this.web.lists.getByTitle("Connect%20Approval").items.filter("Id eq " + Id).get().then((response) => {
     var data = [];
     response.map((item) => {
       data.push({
@@ -70,15 +74,37 @@ private _getListData(Id): Promise<ISPList[]> {
         Category: item.Category,
         SubCategory: item.Sub_x0020_Category,
         Status: item.Status,
-        ApproverComment: item.ApproverComment,
-        ApprovedRejectedDate :item.ApprovedRejectedDate,
-        ApprovedBy :item.ApprovedBy
+        ApproverComment: item.Approver_x0020_Comments,
+        ApprovedRejectedDate :item.ApproveRejectedDate,
+        ApprovedBy :item.ApprovedByDisplay,
+        ReasonForReject :item.ReasonForReject
       });
     });
  
     return data;
   });
 }  
+
+// public getApproverName(Id : number)
+// {
+//   let approverName;
+//   this.web.lists.getByTitle('Connect%20Approval').items.getById(Id).fieldValuesAsText.get().then(function(data) {
+//       //Populate all field values for the List Item
+//       for (var k in data) 
+//       {
+//         console.log(k + " - " + data[k]);  
+//         if(k == "Approver")  
+//         {   
+//         approverName = data[k]; 
+//         } 
+//       } 
+//       return approverName;
+//   }).then(response=>{
+//       this.approver=response;   
+//       console.log("this.approver========" +this.approver);
+//   });
+//   this.setState(this.approver);  
+// }
 
   public render(): React.ReactElement<IViewRequestProps> { 
     const divPadding = {      
@@ -94,7 +120,8 @@ private _getListData(Id): Promise<ISPList[]> {
       margin :0,
       fontWeight : 400,
       fontFamily :'"Segoe UI Semibold WestEuropean","Segoe UI Semibold","Segoe UI",Tahoma,Arial,sans-serif',
-      fontSize : '14px'
+      fontSize : '14px',
+      color : "#002271"
     }
     const lblValue ={
 
@@ -102,7 +129,15 @@ private _getListData(Id): Promise<ISPList[]> {
       fontWeight:400,
       fontSize:'14px',
       padding :'0 0 5px',
+      borderBottom: 'solid thin #ababab',
     }
+
+
+    if(this.listdata.Status && this.listdata.Status == "Reject")
+    {
+      document.getElementById("divReason").hidden = false;
+    }
+
     var appRejDate = '';
   
     if(this.listdata.ApprovedRejectedDate){
@@ -110,32 +145,14 @@ private _getListData(Id): Promise<ISPList[]> {
     }
     return (
       <div className={ styles.viewRequest }>
-          {/* <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12"> */}
-            <div className="ms-Grid-col ms-u-sm12 ms-u-md6 ms-u-lg6">
+        
+            <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
 
-              <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12" style={divPadding}>
-                <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12" style={lblHeader}> 
-                  <label>Category</label>
-                </div>
-                <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12" style={lblValue}> 
-                  <label>{this.listdata.Category}</label>
-                </div>
-              </div>
-            
-              <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12" style={divPadding} >
-                <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12" style={lblHeader}> 
-                  <label>Sub Category</label>
-                </div>
-                <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12" style={lblValue}> 
-                  <label>{this.listdata.SubCategory}</label>
-                </div>
-              </div>
-
-              <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12" style={divPadding}>
+             <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12" style={divPadding}>
                 <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12" style={lblHeader}> 
                   <label>Title</label>
                 </div>
-                <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12" style={lblValue}> 
+                <div className="ms-Grid-col ms-u-sm12 ms-u-md6 ms-u-lg6" style={lblValue}> 
                   <label>{this.listdata.Title}</label>
                 </div>
               </div>
@@ -144,58 +161,87 @@ private _getListData(Id): Promise<ISPList[]> {
                 <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12" style={lblHeader}> 
                   <label>Description</label>
                 </div>
-                <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12" style={lblValue}> 
+                <div className="ms-Grid-col ms-u-sm12 ms-u-md6 ms-u-lg6" style={lblValue}> 
                   <label>{this.listdata.Description}</label>
                 </div>
               </div>  
+
+              <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12" style={divPadding}>
+                <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12" style={lblHeader}> 
+                  <label>Category</label>
+                </div>
+                <div className="ms-Grid-col ms-u-sm12 ms-u-md6 ms-u-lg6" style={lblValue}> 
+                  <label>{this.listdata.Category}</label>
+                </div>
+              </div>
+            
+              <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12" style={divPadding} >
+                <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12" style={lblHeader}> 
+                  <label>Sub Category</label>
+                </div>
+                <div className="ms-Grid-col ms-u-sm12 ms-u-md6 ms-u-lg6" style={lblValue}> 
+                  <label>{this.listdata.SubCategory}</label>
+                </div>
+              </div>
 
               <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12" style={divPadding} >
                 <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12" style={lblHeader}> 
                   <label>Status</label>
                 </div>
-                <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12" style={lblValue}> 
+                <div className="ms-Grid-col ms-u-sm12 ms-u-md6 ms-u-lg6" style={lblValue}> 
                   <label>{this.listdata.Status}</label>
                 </div>
               </div>  
+
+              <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12" hidden id='divReason' style={divPadding} >
+                <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12" style={lblHeader}> 
+                  <label>Reason For Reject</label>
+                </div>
+                <div className="ms-Grid-col ms-u-sm12 ms-u-md6 ms-u-lg6" style={lblValue}> 
+                  <label>{this.listdata.ReasonForReject}</label>
+                </div>
+              </div>  
+
+
               <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12" style={divPadding} >
                 <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12" style={lblHeader}> 
                   <label>Approver Comment</label>
                 </div>
-                <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12" style={lblValue}> 
+                <div className="ms-Grid-col ms-u-sm12 ms-u-md6 ms-u-lg6" style={lblValue}> 
                   <label>{this.listdata.ApproverComment}</label>
                 </div>
               </div>  
-              <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12" style={divPadding} >
+              {/* <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12" style={divPadding} >
                 <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12" style={lblHeader}> 
                   <label>Approved By</label>
                 </div>
-                <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12" style={lblValue}> 
+                <div className="ms-Grid-col ms-u-sm12 ms-u-md6 ms-u-lg6" style={lblValue}> 
                   <label>{this.listdata.ApprovedBy}</label>
                 </div>
-              </div>  
+              </div>   */}
               <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12" style={divPadding} >
                 <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12" style={lblHeader}> 
                   <label>Approved/Rejected Date</label>
                 </div>
-                <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12" style={lblValue}> 
+                <div className="ms-Grid-col ms-u-sm12 ms-u-md6 ms-u-lg6" style={lblValue}> 
                    <label>{appRejDate}</label>
                 </div>             
               </div> 
 
               <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12" style={divPadding} >
-              <div className="ms-Grid-col ms-u-sm12 ms-u-md8 ms-u-lg8"> 
-              </div>
-              <div className="ms-Grid-col ms-u-sm12 ms-u-md4 ms-u-lg4"> 
+             
+              
                 <DefaultButton
                   text='Close'
+                  iconProps = {{iconName : "Cancel"}}
+                  style ={{backgroundColor: '#a6a6a6'}}        
                   href='https://bajajelect.sharepoint.com/teams/ConnectApp/'
                   /> 
               </div>
-              </div>         
+                    
           </div>
-          <div className="ms-Grid-col ms-u-sm12 ms-u-md6 ms-u-lg6 {styles.column}">
-          </div>         
-        {/* </div> */}
+                
+      
       </div>
     );
   }

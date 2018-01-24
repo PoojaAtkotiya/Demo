@@ -7,15 +7,17 @@ import {
   PropertyPaneTextField
 } from '@microsoft/sp-webpart-base';
 
-import * as strings from 'MyRequestListViewWebPartStrings';
-import MyRequestListView from './components/MyRequestListView';
-import { IMyRequestListViewProps } from './components/IMyRequestListViewProps';
+import * as strings from 'ViewApproverFormWebPartStrings';
+import ViewApproverForm from './components/ViewApproverForm';
+import { IViewApproverFormProps } from './components/IViewApproverFormProps';
 import pnp from "sp-pnp-js";
-export interface IMyRequestListViewWebPartProps {
+
+export interface IViewApproverFormWebPartProps {
   description: string;
+  context:any;
 }
 
-export default class MyRequestListViewWebPart extends BaseClientSideWebPart<IMyRequestListViewWebPartProps> {
+export default class ViewApproverFormWebPart extends BaseClientSideWebPart<IViewApproverFormWebPartProps> {
 
   public onInit(): Promise<void> {
     
@@ -27,12 +29,17 @@ export default class MyRequestListViewWebPart extends BaseClientSideWebPart<IMyR
       
     });
   }
+
+
+
   public render(): void {
-    const element: React.ReactElement<{} > = React.createElement(
-      MyRequestListView
-      
+    const element: React.ReactElement<IViewApproverFormProps > = React.createElement(
+      ViewApproverForm,
+      {
+        description: this.properties.description,
+        context: this.context
+      }
     );
-  
 
     ReactDom.render(element, this.domElement);
   }
