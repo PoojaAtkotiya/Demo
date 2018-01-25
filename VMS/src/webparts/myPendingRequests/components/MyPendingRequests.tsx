@@ -160,8 +160,8 @@ let _columns = [
     minWidth: 100,
     maxWidth: 200,
     isResizable: true,
-    onRender:  item  =>  ( item.Attachments != null ?
-      <Link  data-selection-invoke={true}  href={item.Attachments}>
+    onRender: item => ( item.Attachments != null ?
+      <Link data-selection-invoke={true} href={item.Attachments} target="_blank">
         Attachment
       </Link>
       : <span>No Attachment</span>

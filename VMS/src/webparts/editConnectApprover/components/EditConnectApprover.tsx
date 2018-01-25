@@ -19,7 +19,6 @@ export default class EditConnectApprover extends React.Component<IEditConnectApp
   private Visible: string = 'hidden';
   queryParameters: UrlQueryParameterCollection
   web: any;
-  //private creatorName :string;
   private statusOption: IDropdownOption[];
   private reasonForRejectSelectedValue: { key: string | number | undefined, value: string };
   private reasonForRejectData: IDropdownOption[];
@@ -47,8 +46,8 @@ export default class EditConnectApprover extends React.Component<IEditConnectApp
       Created: undefined,
       Creator: undefined,
       ReasonForReject: undefined,
-      Attachments :undefined,
-      FileName :undefined
+      Attachments: undefined,
+      FileName: undefined
     }
 
     this.web = new Web(this.props.context.pageContext.web.absoluteUrl);
@@ -128,16 +127,13 @@ export default class EditConnectApprover extends React.Component<IEditConnectApp
             Creator: item.Creator,
             ReasonForReject: item.ReasonForReject,
             Attachments: item.Attachments,
-            FileName :item.FileName
+            FileName: item.FileName
           };
 
         });
         this.setState(this.listdata);
         if (this.listdata.Status == 'Reject') {
           this.getReasonForReject({ key: this.listdata.Status, text: this.listdata.Status })
-
-          console.log(this.listdata);
-          //  document.getElementById("ddlReasons-option").textContent = this.listdata.ReasonForReject;
           this.setState(this.listdata);
         }
 
@@ -162,8 +158,8 @@ export default class EditConnectApprover extends React.Component<IEditConnectApp
           Created: item.Created,
           Creator: item.CreatedByDisplay,
           ReasonForReject: item.ReasonForReject,
-          Attachments: (item.AttachmentFiles.length>0? item.AttachmentFiles[0].ServerRelativeUrl:null),
-          FileName : (item.AttachmentFiles.length>0? item.AttachmentFiles[0].FileName:null),
+          Attachments: (item.AttachmentFiles.length > 0 ? item.AttachmentFiles[0].ServerRelativeUrl : null),
+          FileName: (item.AttachmentFiles.length > 0 ? item.AttachmentFiles[0].FileName : null),
         });
       });
       return data;
@@ -264,7 +260,7 @@ export default class EditConnectApprover extends React.Component<IEditConnectApp
 
   public _saveApprovalConnectForm() {
     if (!this.isSaveClick) {
-      this.isSaveClick=true;
+      this.isSaveClick = true;
       var _approverComment = document.getElementById('txtApproverComment')['value'].trim();
       var _status = document.getElementById("ddlStatus-option").textContent;
 
@@ -386,7 +382,7 @@ export default class EditConnectApprover extends React.Component<IEditConnectApp
       backgroundSize: 'cover',
     }
 
-    
+
     return (
       <form formNoValidate >
         <div className={styles.editConnectApprover} >
@@ -452,7 +448,7 @@ export default class EditConnectApprover extends React.Component<IEditConnectApp
                 <label>Attachment</label>
               </div>
               <div className="ms-Grid-col ms-u-sm12 ms-u-md6 ms-u-lg6" style={lblValue}>
-                <label><a href={this.listdata.Attachments}>{this.listdata.FileName}</a></label>
+                <label><a href={this.listdata.Attachments} target="_blank">{this.listdata.FileName}</a></label>
               </div>
             </div>
 
@@ -526,7 +522,7 @@ export default class EditConnectApprover extends React.Component<IEditConnectApp
                 </div>
                 <div className="ms-Grid-col ms-u-sm12 ms-u-md6 ms-u-lg6" style={btnStyle}>
                   <DefaultButton
-                    style={{ backgroundColor: '#A73434', color : '#fff' }}
+                    style={{ backgroundColor: '#A73434', color: '#fff' }}
                     text="Cancel"
                     iconProps={{ iconName: "Cancel" }}
                     href="https://bajajelect.sharepoint.com/teams/ConnectApp/" />
@@ -540,7 +536,7 @@ export default class EditConnectApprover extends React.Component<IEditConnectApp
         </div>
         <Dialog
 
-          className="dialog"
+          type = {DialogType.largeHeader}
           isOpen={this.confirmDialog}
           onDismiss={() => this._closeDialog()}
           title='JMD Connect'
@@ -552,7 +548,7 @@ export default class EditConnectApprover extends React.Component<IEditConnectApp
         </Dialog>
         <Dialog
 
-          className="dialog"
+          type = {DialogType.largeHeader}
           isOpen={this.messegeDialog}
           onDismiss={() => this._closemessegeDialog()}
           title={this.saveMsgTitle}
@@ -560,7 +556,7 @@ export default class EditConnectApprover extends React.Component<IEditConnectApp
         </Dialog>
         <Dialog
 
-          className="dialog"
+          type = {DialogType.largeHeader}
           isOpen={this.errorDialog}
           onDismiss={() => this._closeDialog()}
           title='Error'>

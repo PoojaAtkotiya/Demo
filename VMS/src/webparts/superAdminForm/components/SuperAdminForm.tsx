@@ -326,7 +326,7 @@ export default class SuperAdminForm extends React.Component<ISuperAdminFormProps
                 <label>Attachment</label>
               </div>
               <div className="ms-Grid-col ms-u-sm12 ms-u-md6 ms-u-lg6" style={lblValue}>
-                <label><a href={this.listdata.Attachments}>{this.listdata.FileName}</a></label>
+                <label><a href={this.listdata.Attachments} target="_blank">{this.listdata.FileName}</a></label>
               </div>
             </div>
 
@@ -438,7 +438,7 @@ export default class SuperAdminForm extends React.Component<ISuperAdminFormProps
 
         <Dialog
 
-          className="dialog"
+          type = {DialogType.largeHeader}
           isOpen={this.confirmDialog}
           onDismiss={() => this._closeDialog()}
           title='JMD Connect'
@@ -450,15 +450,14 @@ export default class SuperAdminForm extends React.Component<ISuperAdminFormProps
         </Dialog>
         <Dialog
 
-          className="dialog"
+          type = {DialogType.largeHeader}
           isOpen={this.messegeDialog}
           onDismiss={() => this._closemessegeDialog()}
           title={this.saveMsgTitle}
           subText={this.saveMsg} >
         </Dialog>
         <Dialog
-
-          className="dialog"
+          type = {DialogType.largeHeader}
           isOpen={this.errorDialog}
           onDismiss={() => this._closeDialog()}
           title='Error'>

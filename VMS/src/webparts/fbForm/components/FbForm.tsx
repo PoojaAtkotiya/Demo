@@ -254,6 +254,7 @@ export default class FbForm extends React.Component<IFbFormProps, {}>  {
     var file = document.getElementById('fileLoader')["files"][0];
     span.innerHTML = file.name;
     document.getElementById("removeImage").style.display = 'block';
+    // document.getElementById("removeImage").style.visibility = 'visible';
 
 
   }
@@ -306,22 +307,22 @@ export default class FbForm extends React.Component<IFbFormProps, {}>  {
         Sub_x0020_Category: _subCategory,
         Title: _title,
         Feedback_x0020_Description: _description,
-       
+
       }).then((result) => {
-      console.log(result.data.Id);
-      var span = document.getElementById('upload-path');
-      if (span.innerHTML != "") {
-        var file = document.getElementById('fileLoader')["files"][0];
-       let item = pnp.sp.web.lists.getByTitle("Connect%20Approval").items.getById(result.data.Id);
-  
-       console.log(file.name);
-        item.attachmentFiles.add(file.name, file).then(v => {
-  
-         console.log(v);
-       });
-      }
-      this.hideConfirmDialog();
-       window.location.href = "https://bajajelect.sharepoint.com/teams/ConnectApp/";
+        console.log(result.data.Id);
+        var span = document.getElementById('upload-path');
+        if (span.innerHTML != "") {
+          var file = document.getElementById('fileLoader')["files"][0];
+          let item = pnp.sp.web.lists.getByTitle("Connect%20Approval").items.getById(result.data.Id);
+
+          console.log(file.name);
+          item.attachmentFiles.add(file.name, file).then(v => {
+
+            console.log(v);
+          });
+        }
+        this.hideConfirmDialog();
+        window.location.href = "https://bajajelect.sharepoint.com/teams/ConnectApp/";
 
 
 
@@ -427,7 +428,6 @@ export default class FbForm extends React.Component<IFbFormProps, {}>  {
               Sub Category
               <Dropdown
                 placeHolder='Select an Option'
-
                 // label='*Sub-Category'
                 id='txtSubCategory'
                 selectedKey={this.listdata.SubCategory}
@@ -477,21 +477,19 @@ export default class FbForm extends React.Component<IFbFormProps, {}>  {
             />
           </div>
 
-          <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12" style={{padding: "3px 3px 8px 3px"}}>
+          <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12" style={divPadding}>
             <input type="file" id="fileLoader" onChange={this.fileupload} name="files" title="Load File" style={{ "display": "none", "background-color": "#ffffff", "border-color": "#c8c8c8", "color": "#333333" }} />
 
             <input type="button" className={styles.SPButton} id="btnOpenFileDialog" value="Add attachment"
               onClick={this.browseFile} />
-            <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12" style={{ "padding": "none" }}>
+            <div style={{ "padding": "none" }}>
 
-            <div className="ms-Grid-col ms-u-sm12 ms-u-md8 ms-u-lg8" style ={{paddingRight :0}}><span id="upload-path"></span></div>
-            <div className="ms-Grid-col ms-u-sm12 ms-u-md4 ms-u-lg4" style ={{paddingLeft :0}}> <input type="image" id="removeImage" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTpwSM2jTJ9qBYpju0EPjXRD-bgiHWM3nXuV0kfHZ5xG_wpsfS3" alt="Remove Attachment" width="20" height="20" onClick={this.clearFile} style={{ "display": "none" }} /></div>
-              
 
-             
-              
+              <span id="upload-path" ></span>
+              <i id="removeImage" className="ms-Icon ms-Icon--Cancel" onClick={this.clearFile} style={{ "display": "none" }} aria-hidden="true"></i>
+
             </div>
-            
+
 
           </div>
 
@@ -509,7 +507,7 @@ export default class FbForm extends React.Component<IFbFormProps, {}>  {
               </div>
               <div className="ms-Grid-col ms-u-sm12 ms-u-md4 ms-u-lg4" style={btnStyle}>
                 <Button
-                  style={{ backgroundColor: '#A73434', color : '#fff' }}
+                  style={{ backgroundColor: '#A73434', color: '#fff' }}
                   text="Cancel"
                   iconProps={{ iconName: "Cancel" }}
                   href="https://bajajelect.sharepoint.com/teams/ConnectApp/" />
@@ -520,13 +518,13 @@ export default class FbForm extends React.Component<IFbFormProps, {}>  {
           <div></div>
         </div>
         <Dialog
-
-          className="dialog"
+          type = {DialogType.largeHeader}
           isOpen={this.confirmDialog}
           onDismiss={() => this._closeDialog()}
           title='JMD Connect'
-          subText="Are you sure you want to add connect call?" >
-          <DialogFooter>
+          subText="Are you sure you want to add connect call?"
+           >
+          <DialogFooter >
             <PrimaryButton id="btnYes"
               onClick={() => {
                 this._saveJMDConnectForm()
@@ -542,15 +540,15 @@ export default class FbForm extends React.Component<IFbFormProps, {}>  {
         </Dialog>
         <Dialog
 
-          className="dialog"
+          type = {DialogType.largeHeader}
           isOpen={this.messegeDialog}
           onDismiss={() => this._closemessegeDialog()}
           title={this.saveMsgTitle}
           subText={this.saveMsg} >
         </Dialog>
         <Dialog
-
-          className="dialog"
+          
+          type = {DialogType.largeHeader}
           isOpen={this.errorDialog}
           onDismiss={() => this._closeDialog()}
           title='Error'>

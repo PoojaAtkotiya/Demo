@@ -3,7 +3,7 @@
   "solution": {
     "name": "connect-client-side-solution",
     "id": "f31bd4be-da69-457c-afec-3587616edd0c",
-    "version": "1.0.0.9"
+    "version": "1.0.0.10"
   },
   "paths": {
     "zippedPackage": "solution/connect.sppkg"

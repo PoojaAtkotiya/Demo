@@ -29,8 +29,8 @@ export default class ViewApproverForm extends React.Component<IViewApproverFormP
       ApprovedBy: undefined,
       ApprovedRejectedDate: undefined,
       CreatedBy: undefined,
-      Attachments :undefined,
-      FileName :undefined
+      Attachments: undefined,
+      FileName: undefined
     }
 
     this.web = new Web(this.props.context.pageContext.web.absoluteUrl);
@@ -65,7 +65,7 @@ export default class ViewApproverForm extends React.Component<IViewApproverFormP
             ApprovedBy: item.ApprovedBy,
             CreatedBy: item.CreatedBy,
             Attachments: item.Attachments,
-            FileName :item.FileName
+            FileName: item.FileName
           };
         });
         this.setState(this.listdata);
@@ -89,8 +89,8 @@ export default class ViewApproverForm extends React.Component<IViewApproverFormP
           ApprovedRejectedDate: item.ApproveRejectedDate,
           ApprovedBy: item.ApprovedByDisplay,
           CreatedBy: item.CreatedByDisplay,
-          Attachments: (item.AttachmentFiles.length>0? item.AttachmentFiles[0].ServerRelativeUrl:null),
-          FileName : (item.AttachmentFiles.length>0? item.AttachmentFiles[0].FileName:null),
+          Attachments: (item.AttachmentFiles.length > 0 ? item.AttachmentFiles[0].ServerRelativeUrl : null),
+          FileName: (item.AttachmentFiles.length > 0 ? item.AttachmentFiles[0].FileName : null),
         });
       });
 
@@ -226,13 +226,13 @@ export default class ViewApproverForm extends React.Component<IViewApproverFormP
           </div>
 
           <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12" style={divPadding} >
-              <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12" style={lblHeader}>
-                <label>Attachment</label>
-              </div>
-              <div className="ms-Grid-col ms-u-sm12 ms-u-md6 ms-u-lg6" style={lblValue}>
-                <label><a href={this.listdata.Attachments}>{this.listdata.FileName}</a></label>
-              </div>
+            <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12" style={lblHeader}>
+              <label>Attachment</label>
             </div>
+            <div className="ms-Grid-col ms-u-sm12 ms-u-md6 ms-u-lg6" style={lblValue}>
+              <label><a href={this.listdata.Attachments} target="_blank">{this.listdata.FileName}</a></label>
+            </div>
+          </div>
 
           <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12" style={divPadding} >
             <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12" style={lblHeader}>
@@ -293,7 +293,7 @@ export default class ViewApproverForm extends React.Component<IViewApproverFormP
             <DefaultButton
               text='Close'
               iconProps={{ iconName: "Cancel" }}
-              style={{ backgroundColor: '#A73434', color : '#fff' }}
+              style={{ backgroundColor: '#A73434', color: '#fff' }}
               href='https://bajajelect.sharepoint.com/teams/ConnectApp/'
             />
           </div>

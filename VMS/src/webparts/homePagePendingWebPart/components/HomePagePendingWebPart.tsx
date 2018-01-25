@@ -8,11 +8,7 @@ import pnp from "sp-pnp-js";
 import { Web } from "sp-pnp-js";
 import { Item, Items } from 'sp-pnp-js/lib/sharepoint/items';
 import { autobind } from 'office-ui-fabric-react/lib/Utilities';
-import {
-  Image,
-  IImageProps,
-  ImageFit
-} from 'office-ui-fabric-react/lib/Image';
+import { Label } from 'office-ui-fabric-react';
 
 let _items: {
   key: string,
@@ -22,7 +18,7 @@ let _items: {
 }[] = [];
 
 
-export default class HomePagePendingWebPart extends React.Component<IHomePagePendingWebPartProps,{ items: { key: string, name: string }[]; }> {
+export default class HomePagePendingWebPart extends React.Component<IHomePagePendingWebPartProps, { items: { key: string, name: string }[]; }> {
   public _isSuperUserOrApprover: boolean = false;
   constructor(props: {}) {
     super(props);
@@ -38,10 +34,10 @@ export default class HomePagePendingWebPart extends React.Component<IHomePagePen
       )
       if (_items.length === 0) {
         pnp.sp.web.siteGroups.getByName("Super User").users.get().then(function (usersList) {
-          for  (var  i  =  0;  i  <  usersList.length;  i++) {
-            console.log("Title: "  +  usersList[i].Title);
-            console.log("ID: "  +  usersList[i].Id);
-            if (usersList[i].Title  ==  res.Title) {
+          for (var i = 0; i < usersList.length; i++) {
+            console.log("Title: " + usersList[i].Title);
+            console.log("ID: " + usersList[i].Id);
+            if (usersList[i].Title == res.Title) {
               _items.push({ key: "test", name: "Name", value: 5, Title: "Title" });
             }
           }
@@ -69,27 +65,19 @@ export default class HomePagePendingWebPart extends React.Component<IHomePagePen
     })
   }
   public render(): React.ReactElement<IHomePagePendingWebPartProps> {
-    let imageProps: IImageProps = {
-      src: 'https://bajajelect.sharepoint.com/teams/ConnectApp/SiteAssets/Images/download.png',
-      imageFit: ImageFit.contain,
-      width: 450,
-      height: 50,
-      onClick: (ev) => window.location.href="https://bajajelect.sharepoint.com/teams/ConnectApp/SitePages/Pending Approval Requests.aspx"
-    };
+
     if (this.state.items.length === 0) {
       console.log(this.state.items.length)
       setTimeout(() => { this.setState({ items: _items }) }, 500)
       return null
     }
-   const cmdStyle = {
-     fontSize : '24px',
-     color : 'red',
-   }
+
     let { items } = this.state
     console.log(this.state.items.length)
     return (
-      <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12" style ={{border : "1px solid #038387"}}>       
-      <Image { ...imageProps as any } src='https://bajajelect.sharepoint.com/teams/ConnectApp/SiteAssets/Images/PendingHomeNew.png' alt='My Pending Request' />
+      <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12" style={{ border: "1px solid #038387" }}>
+        <a style={{ textDecoration: 'none' }} href="https://bajajelect.sharepoint.com/teams/ConnectApp/SitePages/Pending Approval Requests.aspx"> <Label className="ms-fontSize-xxl"> <i alt="My Pending Request" className="ms-Icon ms-Icon--AlarmClock" aria-hidden="true"></i> Connect Call Pending For Your Action</Label></a>
+
       </div>
     );
   }
