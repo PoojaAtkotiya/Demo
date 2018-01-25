@@ -17,6 +17,7 @@ import {
   SpinnerSize
 } from 'office-ui-fabric-react/lib/Spinner';
 
+let Count = 0;
 let _items: {
   key: number,
   name: string,
@@ -255,10 +256,19 @@ export default class MyPendingRequests extends React.Component<{}, { items: {}[]
   }
 
   public render() {
-    if (_items.length === 0) {
+    if (_items.length === 0 && Count<7) {
+      Count++;
       setTimeout(() => {
         this.setState({ items: _items })
       }, 500);
+      if(Count>7)
+      {
+        return (
+          <div>
+            <label>No Data Available</label>
+          </div>
+        )     
+      }
       return (
         <div>
           <Spinner size={SpinnerSize.large} label='Please wait, we are loading...' />
@@ -269,21 +279,14 @@ export default class MyPendingRequests extends React.Component<{}, { items: {}[]
     let { items } = this.state;
     return (
       <div>
-
         <DetailsList
           items={items}
           columns={_columns}
           layoutMode={DetailsListLayoutMode.fixedColumns}
-          //onItemInvoked={ this._onItemInvoked }
           checkboxVisibility={CheckboxVisibility.hidden}
         />
 
       </div>
     );
-  }
-
-  @autobind
-  private _onItemInvoked(item: any): void {
-    window.location.href = item.EditLink;
   }
 }

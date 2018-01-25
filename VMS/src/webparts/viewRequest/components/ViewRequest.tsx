@@ -11,11 +11,11 @@ import { UrlQueryParameterCollection } from '@microsoft/sp-core-library';
 export default class ViewRequest extends React.Component<IViewRequestProps, {}> {
 
   private listdata: ISPList;
-  queryParameters: UrlQueryParameterCollection;
-  web: any;
+  public queryParameters: UrlQueryParameterCollection;
+  public web: any;
   //private approver : string;
 
-  componentWillMount() {
+  public componentWillMount() {
     this.listdata = {
       ID: undefined,
       Title: undefined,
@@ -32,7 +32,7 @@ export default class ViewRequest extends React.Component<IViewRequestProps, {}> 
       SuperAdminCommentDate: undefined,
       Attachments: undefined,
       FileName: undefined
-    }
+    };
 
     this.web = new Web(this.props.context.pageContext.web.absoluteUrl);
     this.queryParameters = new UrlQueryParameterCollection(window.location.href);
@@ -137,7 +137,7 @@ export default class ViewRequest extends React.Component<IViewRequestProps, {}> 
       fontFamily: '"Segoe UI Semibold WestEuropean","Segoe UI Semibold","Segoe UI",Tahoma,Arial,sans-serif',
       fontSize: '14px',
       color: "#002271"
-    }
+    };
     const lblValue = {
 
       fontFamily: '"Segoe UI Regular WestEuropean","Segoe UI",Tahoma,Arial,sans-serif',
@@ -145,7 +145,7 @@ export default class ViewRequest extends React.Component<IViewRequestProps, {}> 
       fontSize: '14px',
       padding: '0 0 5px',
       borderBottom: 'solid thin #ababab',
-    }
+    };
 
     var comment = '';
     var appRejDate = '';
@@ -167,7 +167,7 @@ export default class ViewRequest extends React.Component<IViewRequestProps, {}> 
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat',
       backgroundSize: 'cover',
-    }
+    };
 
     return (
       <div className={styles.viewRequest} >

@@ -17,13 +17,13 @@ import {
 export default class EditConnectApprover extends React.Component<IEditConnectApproverProps, {}> {
   private listdata: ISPList;
   private Visible: string = 'hidden';
-  queryParameters: UrlQueryParameterCollection
-  web: any;
+  public queryParameters: UrlQueryParameterCollection
+  public web: any;
   private statusOption: IDropdownOption[];
   private reasonForRejectSelectedValue: { key: string | number | undefined, value: string };
   private reasonForRejectData: IDropdownOption[];
 
-  hideDialog: string;
+  public hideDialog: string;
   private errorDialog: boolean;
   private confirmDialog: boolean;
   private messegeDialog: boolean;
@@ -31,7 +31,7 @@ export default class EditConnectApprover extends React.Component<IEditConnectApp
   private saveMsg: string = "";
   private saveMsgTitle: string = "Success";
   public isSaveClick: boolean = false;
-  componentWillMount() {
+  public componentWillMount() {
 
     this.listdata = {
       ID: undefined,
@@ -57,7 +57,6 @@ export default class EditConnectApprover extends React.Component<IEditConnectApp
       const Id: number = parseInt(this.queryParameters.getValue("ApproverId"));
       console.log("ApproverId value is : " + Id);
       this.getListData(Id);
-      //this.getCreatorName(Id);
     }
   }
 
@@ -68,18 +67,15 @@ export default class EditConnectApprover extends React.Component<IEditConnectApp
     if (this.listdata.Status == "Reject") {
       this.Visible = 'visible';
       document.getElementById("divReason").hidden = false;
-      // this.reasonForRejectSelectedValue = { key: item.key, value: item.text };
       var data: IDropdownOption[];
       this._getReasonForRejectData()
         .then((response) => {
           data = this._renderReasonForRejectList(response);
           this.setState(this.reasonForRejectData = data);
         });
-      // return data;
     }
     else {
       this.Visible = 'hidden';
-      console.log("  this.Visible  =" + this.Visible);
       data = null;
       document.getElementById("divReason").hidden = true;
     }
@@ -99,10 +95,8 @@ export default class EditConnectApprover extends React.Component<IEditConnectApp
         text: item.Title
       });
 
-    });
-    //console.log(data);
+    });  
     return data;
-    // this.setState({});
   }
   @autobind
   private reasonSelected(item: IDropdownOption) {
@@ -203,8 +197,6 @@ export default class EditConnectApprover extends React.Component<IEditConnectApp
       document.getElementById("ddlReasons-option").style.backgroundColor = "white";
     }
 
-
-
     if (!_approverComment) {
       document.getElementById("txtApproverComment").parentElement.style.borderColor = "red";
       document.getElementById("txtApproverComment").style.backgroundColor = "lightyellow";
@@ -287,13 +279,10 @@ export default class EditConnectApprover extends React.Component<IEditConnectApp
           //this.messegeDialog = true;
           //this.hideDialog == "true";
           //this.setState(this.hideDialog);
-          // alert("Connect Call updated successfully"); 
-          // window.location.href = "https://bajajelect.sharepoint.com/teams/ConnectApp/";
-
 
         }, (error: any): void => {
           console.log(error);
-          //alert("Oops!Something went wrong!!!");
+  
           this.saveMsgTitle = "Error";
           this.saveMsg = "Oops!Something went wrong!!!";
           this.hideDialog == "true";
@@ -513,7 +502,6 @@ export default class EditConnectApprover extends React.Component<IEditConnectApp
               <div className="ms-Grid-col ms-u-sm12 ms-u-md6 ms-u-lg6">
                 <div className="ms-Grid-col ms-u-sm12 ms-u-md6 ms-u-lg6" style={btnStyle}>
                   <PrimaryButton
-                    // type='Submit'
                     text='Submit'
                     onClick={this._showDialog}
                     iconProps={{ iconName: "CommentAdd" }}

@@ -30,11 +30,10 @@ export default class FbForm extends React.Component<IFbFormProps, {}>  {
   private approverComment: string = "";
   private categoryData: IDropdownOption[];
   private subCategoryData: IDropdownOption[];
-  //private statusOption: IDropdownOption[];
   private listdata: ISPList;
-  queryParameters: UrlQueryParameterCollection
-  web: any;
-  hideDialog: string;
+  public queryParameters: UrlQueryParameterCollection
+  public web: any;
+  public hideDialog: string;
   private errorDialog: boolean;
   private confirmDialog: boolean;
   private messegeDialog: boolean;
@@ -47,8 +46,7 @@ export default class FbForm extends React.Component<IFbFormProps, {}>  {
   private saveMsg: string = "";
   private saveMsgTitle: string = "Success";
   public isSaveClicked: boolean = false;
-  componentWillMount() {
-
+  public componentWillMount() {
 
     this.listdata = {
       ID: undefined,
@@ -83,7 +81,6 @@ export default class FbForm extends React.Component<IFbFormProps, {}>  {
     this._getCategoryData()
       .then((response) => {
         data = this._renderCategoryList(response);
-        //  this.categoryData=data;
         this.setState(this.categoryData = data);
       });
     return data;
@@ -135,7 +132,6 @@ export default class FbForm extends React.Component<IFbFormProps, {}>  {
       });
 
     });
-    // this.setState({});
   }
   @autobind
   private subCategorySelected(item: IDropdownOption) {
@@ -147,23 +143,29 @@ export default class FbForm extends React.Component<IFbFormProps, {}>  {
     this.statusSelectedValue = { key: item.key, value: item.text };
   }
 
-  // private dialog(){
-  //   console.log(this.hideDialog);
-  //   this.errorDialog=true;
-  //   console.log(this.errorDialog);
-  // }
-
   @autobind
   private _showDialog() {
     this.errorMsg = [];
-    console.log("_title = " + document.getElementById("txtTitle")["value"]);
-    const _title = document.getElementById("txtTitle")["value"].trim();    // event.target['txtTitle'].value.trim();
+    const _title = document.getElementById("txtTitle")["value"].trim();
     const _description = document.getElementById('txtDescription')["value"].trim();
     const _category = document.getElementById("txtCategory-option").textContent;
     const _subCategory = document.getElementById("txtSubCategory-option").textContent;
+    var span = document.getElementById('upload-path');
 
     var isValid: boolean = true;
-
+    if (span.innerHTML != "") {
+      var file = document.getElementById('fileLoader')["files"][0];
+      if (file.size > 5242880) {
+        this.errorMsg.push("Files size should not greater than 5 MB.");
+        isValid = false;
+      }
+      var val = file.name.toLowerCase(),
+        regex = new RegExp("([a-zA-Z0-9\s_\\.\-:])+(.doc|.docx|.pdf|.ppt|.pptx|.xls|.xlsx|.txt|.png|.jpg|.jpeg|.bmp|.gif|.psd|.tif|.tiff)$");
+      if (!(regex.test(val))) {
+        this.errorMsg.push('This file extension is not allowed');
+        isValid = false;
+      }
+    }
     if (_category == '' || _category == null || _category == undefined || _category.trim().length <= 0 || _category.toLowerCase().match("select an option")) {
       document.getElementById("txtCategory-option").style.borderColor = "red";
       document.getElementById("txtCategory-option").style.backgroundColor = "lightyellow";
@@ -183,14 +185,14 @@ export default class FbForm extends React.Component<IFbFormProps, {}>  {
       document.getElementById("txtSubCategory-option").style.backgroundColor = "white";
     }
     if (_title == '' || _title == null || _title == undefined) {
-      //  document.getElementById("txtTitle").parentElement.style.border ="solid thin red";
+
       document.getElementById("txtTitle").parentElement.parentElement.style.borderColor = "red";
       document.getElementById("txtTitle").style.backgroundColor = "lightyellow";
       isValid = false;
       this.errorMsg.push("Title is required");
     }
     else if (_title.length > 255) {
-      //document.getElementById("txtTitle").parentElement.style.border ="solid thin red";
+
       document.getElementById("txtTitle").parentElement.parentElement.style.borderColor = "red";
       document.getElementById("txtTitle").style.backgroundColor = "lightyellow";
       isValid = false;
@@ -198,12 +200,10 @@ export default class FbForm extends React.Component<IFbFormProps, {}>  {
     }
     else {
       document.getElementById("txtTitle").parentElement.parentElement.style.borderColor = "";
-      // document.getElementById("txtTitle").parentElement.style.border ="";
       document.getElementById("txtTitle").style.backgroundColor = "white";
     }
     if (_description == '' || _description == null || _description == undefined) {
 
-      // document.getElementById("txtDescription").parentElement.style.border ="solid thin red";
       document.getElementById("txtDescription").parentElement.parentElement.style.borderColor = "red";
       document.getElementById("txtDescription").style.backgroundColor = "lightyellow";
       isValid = false;
@@ -211,14 +211,12 @@ export default class FbForm extends React.Component<IFbFormProps, {}>  {
     }
     else if (_description.length > 1000) {
 
-      // document.getElementById("txtDescription").parentElement.style.border ="solid thin red";
       document.getElementById("txtDescription").parentElement.parentElement.style.borderColor = "red";
       document.getElementById("txtDescription").style.backgroundColor = "lightyellow";
       isValid = false;
       this.errorMsg.push("Description should not be longer than 1000 characters.");
     }
     else {
-      //  document.getElementById("txtDescription").parentElement.style.border ="";
       document.getElementById("txtDescription").parentElement.parentElement.style.borderColor = "";
       document.getElementById("txtDescription").style.backgroundColor = "white";
     }
@@ -237,34 +235,22 @@ export default class FbForm extends React.Component<IFbFormProps, {}>  {
 
   }
 
-  private UploadFiles(selectorFiles: FileList) {
-    // console.log("UploadFiles");
-    // console.log(document.getElementById('UploadFile'));
-    //console.log(selectorFiles);
-    //this.input = {files:document.getElementById('UploadFile'),}; //new FileUpload(files)
-  }
-
-  browseFile() {
+  private browseFile() {
     document.getElementById("fileLoader").click();
   }
 
-  fileupload() {
+  private fileupload() {
 
     var span = document.getElementById('upload-path');
     var file = document.getElementById('fileLoader')["files"][0];
     span.innerHTML = file.name;
     document.getElementById("removeImage").style.display = 'block';
-    // document.getElementById("removeImage").style.visibility = 'visible';
-
 
   }
-  clearFile() {
-
+  private clearFile() {
     var span = document.getElementById('upload-path');
     span.innerHTML = "";
     document.getElementById("removeImage").style.display = 'none';
-
-
   }
 
 
@@ -284,7 +270,7 @@ export default class FbForm extends React.Component<IFbFormProps, {}>  {
 
   }
 
-  hideConfirmDialog() {
+  private hideConfirmDialog() {
     this.confirmDialog = false;
     this.hideDialog == "false";
     this.setState(this.hideDialog);
@@ -293,8 +279,6 @@ export default class FbForm extends React.Component<IFbFormProps, {}>  {
 
   public _saveJMDConnectForm() {
 
-    //document.getElementById("btnYes").setAttribute("hidden", "hidden");
-    //document.getElementById("btnYes").style.color = "blue";
     const _title = document.getElementById('txtTitle')['value'].trim();
     const _description = document.getElementById('txtDescription')['value'].trim();
     const _category = document.getElementById("txtCategory-option").textContent;
@@ -309,30 +293,25 @@ export default class FbForm extends React.Component<IFbFormProps, {}>  {
         Feedback_x0020_Description: _description,
 
       }).then((result) => {
-        console.log(result.data.Id);
+
         var span = document.getElementById('upload-path');
         if (span.innerHTML != "") {
           var file = document.getElementById('fileLoader')["files"][0];
           let item = pnp.sp.web.lists.getByTitle("Connect%20Approval").items.getById(result.data.Id);
 
-          console.log(file.name);
-          item.attachmentFiles.add(file.name, file).then(v => {
 
+          item.attachmentFiles.add(file.name, file).then(v => {
             console.log(v);
           });
         }
         this.hideConfirmDialog();
         window.location.href = "https://bajajelect.sharepoint.com/teams/ConnectApp/";
 
-
-
         //this.saveMsgTitle = "Success";
         //this.saveMsg = "Connect Call added successfully.";
         //this.messegeDialog = true;
         //this.hideDialog == "true";
         //this.setState(this.hideDialog);
-
-
 
       }, (error: any): void => {
         console.log(error);
@@ -344,14 +323,6 @@ export default class FbForm extends React.Component<IFbFormProps, {}>  {
       });
     }
 
-  }
-
-  public onsubmit(event) {
-    event.preventDefault();
-    var form1 = document.querySelector("#frmFeedback");
-    var data = getFormData(form1)
-    console.log(this.refs.txtCategory);
-    console.log(JSON.stringify(data));
   }
 
   public render(): React.ReactElement<IFbFormProps> {
@@ -406,9 +377,7 @@ export default class FbForm extends React.Component<IFbFormProps, {}>  {
               <span style={errorStyle}>*</span>
               Category
               <Dropdown
-
                 placeHolder='Select an Option'
-                //label='*Category'
                 ref={'txtCategory'}
                 id='txtCategory'
                 selectedKey={this.listdata.Category}
@@ -416,8 +385,6 @@ export default class FbForm extends React.Component<IFbFormProps, {}>  {
                 className="ms-Grid-col ms-u-sm12 ms-u-md6 ms-u-lg6"
                 options={this.categoryData}
                 onChanged={this.getSubCategory}
-
-
               />
             </label>
           </div>
@@ -428,7 +395,6 @@ export default class FbForm extends React.Component<IFbFormProps, {}>  {
               Sub Category
               <Dropdown
                 placeHolder='Select an Option'
-                // label='*Sub-Category'
                 id='txtSubCategory'
                 selectedKey={this.listdata.SubCategory}
                 ariaLabel='subCategory'
@@ -450,7 +416,6 @@ export default class FbForm extends React.Component<IFbFormProps, {}>  {
               underlined
               placeholder="Enter text here"
               maxLength={255}
-              //label="*Title"
               className="ms-Grid-col ms-u-sm12 ms-u-md6 ms-u-lg6"
               value={this.listdata.Title}
             />
@@ -470,35 +435,25 @@ export default class FbForm extends React.Component<IFbFormProps, {}>  {
               rows={4}
               maxLength={1000}
               placeholder="Enter text here"
-              // label="*Description"
               className="ms-Grid-col ms-u-sm12 ms-u-md6 ms-u-lg6"
               value={this.listdata.Description}
-
             />
           </div>
 
           <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12" style={divPadding}>
             <input type="file" id="fileLoader" onChange={this.fileupload} name="files" title="Load File" style={{ "display": "none", "background-color": "#ffffff", "border-color": "#c8c8c8", "color": "#333333" }} />
-
             <input type="button" className={styles.SPButton} id="btnOpenFileDialog" value="Add attachment"
               onClick={this.browseFile} />
             <div style={{ "padding": "none" }}>
-
-
               <span id="upload-path" ></span>
               <i id="removeImage" className="ms-Icon ms-Icon--Cancel" onClick={this.clearFile} style={{ "display": "none" }} aria-hidden="true"></i>
-
             </div>
-
-
           </div>
-
 
           <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12">
             <div className="ms-Grid-col ms-u-sm12 ms-u-md6 ms-u-lg6">
               <div className="ms-Grid-col ms-u-sm12 ms-u-md8 ms-u-lg8" style={btnStyle}>
                 <PrimaryButton
-                  // type='Submit'
                   style={{ backgroundColor: '#127316' }}
                   iconProps={{ iconName: 'Add' }}
                   text='Add Connect Call'
@@ -518,37 +473,26 @@ export default class FbForm extends React.Component<IFbFormProps, {}>  {
           <div></div>
         </div>
         <Dialog
-          type = {DialogType.largeHeader}
+          type={DialogType.largeHeader}
           isOpen={this.confirmDialog}
           onDismiss={() => this._closeDialog()}
           title='JMD Connect'
           subText="Are you sure you want to add connect call?"
-           >
+        >
           <DialogFooter >
-            <PrimaryButton id="btnYes"
-              onClick={() => {
-                this._saveJMDConnectForm()
-                // return (
-                //   <div>
-                //     <Spinner size={SpinnerSize.large} label='Please wait, we are loading...' />
-                //   </div>
-                // )
-              }
-              } text='Yes' />
+            <PrimaryButton id="btnYes" onClick={() => {this._saveJMDConnectForm()}} text='Yes' />
             <DefaultButton onClick={() => this._closeDialog()} text='No' />
           </DialogFooter>
         </Dialog>
         <Dialog
-
-          type = {DialogType.largeHeader}
+          type={DialogType.largeHeader}
           isOpen={this.messegeDialog}
           onDismiss={() => this._closemessegeDialog()}
           title={this.saveMsgTitle}
           subText={this.saveMsg} >
         </Dialog>
         <Dialog
-          
-          type = {DialogType.largeHeader}
+          type={DialogType.largeHeader}
           isOpen={this.errorDialog}
           onDismiss={() => this._closeDialog()}
           title='Error'>
@@ -559,12 +503,7 @@ export default class FbForm extends React.Component<IFbFormProps, {}>  {
             <DefaultButton onClick={() => this._closeDialog()} text='Cancel' />
           </DialogFooter>
         </Dialog>
-
-
       </form>
-
-
     );
-
   }
 }

@@ -66,6 +66,11 @@ export default class HomePagePendingWebPart extends React.Component<IHomePagePen
   }
   public render(): React.ReactElement<IHomePagePendingWebPartProps> {
 
+    const linkStyle = {
+
+
+    }
+
     if (this.state.items.length === 0) {
       console.log(this.state.items.length)
       setTimeout(() => { this.setState({ items: _items }) }, 500)
@@ -73,10 +78,12 @@ export default class HomePagePendingWebPart extends React.Component<IHomePagePen
     }
 
     let { items } = this.state
-    console.log(this.state.items.length)
+
     return (
       <div className="ms-Grid-col ms-u-sm12 ms-u-md12 ms-u-lg12" style={{ border: "1px solid #038387" }}>
-        <a style={{ textDecoration: 'none' }} href="https://bajajelect.sharepoint.com/teams/ConnectApp/SitePages/Pending Approval Requests.aspx"> <Label className="ms-fontSize-xxl"> <i alt="My Pending Request" className="ms-Icon ms-Icon--AlarmClock" aria-hidden="true"></i> Connect Call Pending For Your Action</Label></a>
+        <a style={{ textDecoration: 'none' }} href="https://bajajelect.sharepoint.com/teams/ConnectApp/SitePages/Pending Approval Requests.aspx">
+          <Label className="ms-fontSize-xxl" style={{ cursor: 'pointer' }}><i alt="My Pending Request" className="ms-Icon ms-Icon--AlarmClock" aria-hidden="true"></i> Connect Call Pending For Your Action</Label>
+        </a>
 
       </div>
     );
